@@ -5,16 +5,25 @@ const User = require('../models/userModel');
 
 /* GET Google Authentication API. */
 exports.googleAuth = async (req, res, next) => {
-    
+
     const code = req.query.code;
+    if (!code) {
+        return res.status(400).json({ message: "Authorization code missing" });
+    }
     console.log(code);
     try {
         const googleRes = await oauth2Client.getToken(code);
         console.log(googleRes);
         oauth2Client.setCredentials(googleRes.tokens);
         const userRes = await axios.get(
-            `https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+            "https://www.googleapis.com/oauth2/v2/userinfo",
+            {
+                headers: {
+                    Authorization: `Bearer ${googleRes.tokens.access_token}`,
+                },
+            }
         );
+
         console.log(userRes);
         const { email, name, picture } = userRes.data;
         // console.log(userRes);
@@ -38,9 +47,11 @@ exports.googleAuth = async (req, res, next) => {
             user,
         });
     } catch (err) {
-        console.log(err)
+        console.error("Google OAuth Error:", err.response?.data || err.message);
+
         res.status(500).json({
-            message: "Internal Server Error"
-        })
+            message: "Google login failed",
+            error: err.response?.data || err.message,
+        });
     }
 };
