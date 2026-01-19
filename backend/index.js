@@ -16,7 +16,7 @@ app.get("/",(req,res)=>{
   res.send("API is working")
 })
 
-app.use("/auth", authRoutes); // <- NEW LINE
+app.use("/auth/", authRoutes); // <- NEW LINE
 
 app.all('*', (req, res) => {
   res.status(404).json({
