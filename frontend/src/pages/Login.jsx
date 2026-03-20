@@ -16,10 +16,16 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login, googleLogin, loading } = useContext(AuthContext);
   const { isDark, toggleTheme } = useContext(ThemeContext);
-  const googleProvider = new GoogleAuthProvider();
-
   const handleGoogleLogin = async () => {
     try {
+      // Create a new GoogleAuthProvider instance for each login
+      const googleProvider = new GoogleAuthProvider();
+      
+      // Force account selection dialog to appear every time
+      googleProvider.setCustomParameters({
+        prompt: "select_account", // Always show account selection
+      });
+
       const result = await signInWithPopup(auth, googleProvider);
       const { displayName, email: googleEmail } = result.user;
       const response = await googleLogin(displayName || "User", googleEmail);
