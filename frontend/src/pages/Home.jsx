@@ -7,12 +7,12 @@ export function HomePage({ user, onLogout }) {
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
+    <div className={`min-h-screen  transition-colors duration-300 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
       {/* Navbar */}
-      <div className={`flex items-center justify-between px-6 py-4 shadow-md transition-colors duration-300 ${isDark ? "bg-gray-800" : "bg-white"}`}>
+      <div className={`flex items-center justify-between  px-6 py-4 shadow-md transition-colors duration-300 ${isDark ? "bg-gray-800" : "bg-white"}`}>
         <h1 className={`text-xl font-bold ${isDark ? "text-white" : "text-black"}`}>My App</h1>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center  gap-4">
           <span className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>Hi, {user}</span>
 
           {/* Dark Mode Toggle */}
@@ -20,7 +20,7 @@ export function HomePage({ user, onLogout }) {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
-            className={`p-2 rounded-lg transition-colors duration-300 ${
+            className={`p-2 cursor-pointer rounded-lg transition-colors duration-300 ${
               isDark ? "bg-gray-700 text-yellow-400 hover:bg-gray-600" : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
             title={isDark ? "Light Mode" : "Dark Mode"}
