@@ -63,7 +63,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
+    <div className={`min-h-screen p-5 sm:p-2 flex items-center justify-center transition-colors duration-300 ${
       isDark ? "bg-gradient-to-br  from-gray-900 to-gray-800" : "bg-gradient-to-br from-gray-100 to-gray-200"
     }`}>
       {/* Dark Mode Toggle Button */}
