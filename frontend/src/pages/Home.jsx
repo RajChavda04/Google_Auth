@@ -10,8 +10,11 @@ export function HomePage({ user, onLogout }) {
     <div className={`min-h-screen  transition-colors duration-300 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
       {/* Navbar */}
       <div className={`flex items-center justify-between  px-6 py-4 shadow-md transition-colors duration-300 ${isDark ? "bg-gray-800" : "bg-white"}`}>
-        <h1 className={`text-xl font-bold ${isDark ? "text-white" : "text-black"}`}>My App</h1>
-
+        <div className="flex items-center justify-center">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" className="w-6 h-6" />
+        <h1 className={`text-xl font-bold ${isDark ? "text-white" : "text-black"}`}>      
+          oogle Auth</h1>
+          </div>
         <div className="flex items-center  gap-4">
           <span className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>Hi, {user}</span>
 
@@ -32,7 +35,7 @@ export function HomePage({ user, onLogout }) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onLogout}
-            className={`px-4 py-1.5 rounded-lg transition-colors duration-300 ${
+            className={`px-4 py-1.5 rounded-lg transition-colors cursor-pointer duration-300 ${
               isDark ? "bg-red-600 text-white hover:bg-red-700" : "bg-black text-white hover:bg-gray-800"
             }`}
           >
