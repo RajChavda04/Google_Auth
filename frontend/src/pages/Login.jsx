@@ -63,7 +63,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`min-h-screen p-5 sm:p-2 flex items-center justify-center transition-colors duration-300 ${
+    <div className={`min-h-screen p-5 overflow-hidden sm:p-2 flex items-center justify-center transition-colors duration-300 ${
       isDark ? "bg-gradient-to-br  from-gray-900 to-gray-800" : "bg-gradient-to-br from-gray-100 to-gray-200"
     }`}>
       {/* Dark Mode Toggle Button */}
@@ -83,7 +83,7 @@ export default function LoginPage() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className={`w-full max-w-md shadow-xl rounded-2xl p-8 transition-colors duration-300 ${
+        className={`w-full max-w-md shadow-xl rounded-2xl p-4 sm:p-8 transition-colors duration-300 ${
           isDark ? "bg-gray-800" : "bg-white"
         }`}
       >
