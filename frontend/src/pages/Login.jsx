@@ -64,12 +64,12 @@ export default function LoginPage() {
 
   return (
     <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
-      isDark ? "bg-gradient-to-br from-gray-900 to-gray-800" : "bg-gradient-to-br from-gray-100 to-gray-200"
+      isDark ? "bg-gradient-to-br  from-gray-900 to-gray-800" : "bg-gradient-to-br from-gray-100 to-gray-200"
     }`}>
       {/* Dark Mode Toggle Button */}
       <motion.button
         className={`absolute top-6 right-6 p-2 rounded-lg transition-colors duration-300 ${
-          isDark ? "bg-gray-800 text-yellow-400 hover:bg-gray-700" : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+          isDark ? "bg-gray-800 text-yellow-400 cursor-pointer hover:bg-gray-700" : "bg-gray-200 text-gray-800 cursor-pointer hover:bg-gray-300"
         }`}
         onClick={toggleTheme}
         whileHover={{ scale: 1.1 }}

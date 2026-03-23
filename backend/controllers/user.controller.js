@@ -14,6 +14,7 @@ export const registerUser = async (req, res) => {
       });
     }
 
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -60,7 +61,7 @@ export const loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Please provide email and password",
+        message: "Please enter email and password",
       });
     }
 

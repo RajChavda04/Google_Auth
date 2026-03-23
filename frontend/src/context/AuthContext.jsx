@@ -1,5 +1,5 @@
 import { createContext, useState, useCallback, useEffect } from "react";
-
+import { showSuccess, showError, showLoading, dismissToast } from "../utils/toast";
 export const AuthContext = createContext();
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -38,14 +38,17 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (!data.success) {
+        showError(data.message || "Registration failed");
         throw new Error(data.message || "Registration failed");
       }
 
       setUser(data.user);
+      showSuccess(data.message || "Registration successful");
       return { success: true, user: data.user };
     } catch (err) {
-      const errorMessage = err.message || "Registration failed";
+      
       setError(errorMessage);
+      showError(errorMessage || "Registration failed");
       return { success: false, message: errorMessage };
     } finally {
       setLoading(false);
@@ -57,6 +60,12 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
+
+      if (!email || !password){
+        showError("Please enter email and password");
+        return { success: false, message: "Please enter email and password" };
+    }
+
       const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
@@ -66,18 +75,21 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
-
+     
       if (!data.success) {
-        throw new Error(data.message || "Login failed");
+        showError(data.message);
+        return { success: false, message: data.message }
       }
 
       setUser(data.user);
       // Store user data in localStorage
       localStorage.setItem("user", JSON.stringify(data.user));
-      return { success: true, user: data.user };
+      showSuccess(data.message || "Login successful");
+      return { success: true, user: data.user }
     } catch (err) {
       const errorMessage = err.message || "Login failed";
       setError(errorMessage);
+      showError(errorMessage || "Login failed");
       return { success: false, message: errorMessage };
     } finally {
       setLoading(false);
@@ -100,15 +112,18 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (!data.success) {
+        showError(data.message || "Google login failed");
         throw new Error(data.message || "Google login failed");
       }
 
       setUser(data.user);
       localStorage.setItem("user", JSON.stringify(data.user));
+      showSuccess(data.message || "Google login successful");
       return { success: true, user: data.user };
     } catch (err) {
       const errorMessage = err.message || "Google login failed";
       setError(errorMessage);
+      showError(errorMessage || "Google login failed");
       return { success: false, message: errorMessage };
     } finally {
       setLoading(false);

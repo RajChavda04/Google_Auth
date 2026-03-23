@@ -5,6 +5,7 @@ import { HomePage } from "./pages/Home"
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from './context/AuthContext.jsx'
+import ToastProvider from './components/ToastProvider.jsx'
 
 // Protected Route Component
 const ProtectedRoute = ({ element, user, loading }) => {
@@ -32,11 +33,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginRoute element={<Login />} user={user} loading={loading} />} />
-        <Route path="/home" element={<ProtectedRoute element={<HomePage user={user?.name || user?.email} onLogout={handleLogout} />} user={user} loading={loading} />} />
-        <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
-      </Routes>
+     <ToastProvider />
+        <Routes>
+          <Route path="/login" element={<LoginRoute element={<Login />} user={user} loading={loading} />} />
+          <Route path="/home" element={<ProtectedRoute element={<HomePage user={user?.name || user?.email} onLogout={handleLogout} />} user={user} loading={loading} />} />
+          <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
+        </Routes>
+     
     </BrowserRouter>
   )
 }
