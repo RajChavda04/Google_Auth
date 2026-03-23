@@ -141,8 +141,8 @@ export default function LoginPage() {
             whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg font-medium transition cursor-pointer disabled:opacity-50 ${
-              isDark ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-black text-white hover:bg-gray-800"
+            className={`w-full py-2 rounded-lg font-medium transition  disabled:opacity-50 ${
+              isDark ? "bg-blue-600 text-white cursor-pointer  hover:bg-blue-700" : "bg-black text-white cursor-not-allowed  hover:bg-gray-800"
             }`}
           >
             {loading ? "Logging in..." : "Login"}
