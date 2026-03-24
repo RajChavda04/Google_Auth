@@ -1,5 +1,7 @@
+
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import admin from "../config/firebaseAdmin.js"
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -104,37 +106,82 @@ export const loginUser = async (req, res) => {
 };
 
 // Google OAuth Login / Register
+// export const googleAuthUser = async (req, res) => {
+//   try {
+//     const { name, email } = req.body;
+
+//     // Validation
+//     if (!name || !email) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Please provide name and email",
+//       });
+//     }
+
+//     // Check if user exists
+//     let user = await User.findOne({ email });
+
+//     // If user doesn't exist, create new user with Google auth
+//     if (!user) {
+//       user = await User.create({
+//         name,
+//         email,
+//         // No password for Google OAuth users
+//       });
+//     } else {
+//       // Update name if it changed
+//       if (user.name !== name) {
+//         user.name = name;
+//         await user.save();
+//       }
+//     }
+
+//     // Remove password from response
+//     const userResponse = user.toObject();
+//     delete userResponse.password;
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Google authentication successful",
+//       user: userResponse,
+//     });
+//   } catch (error) {
+//     console.error("Google Auth Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message || "Internal server error",
+//     });
+//   }
+// };
 export const googleAuthUser = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { token } = req.body;
 
-    // Validation
-    if (!name || !email) {
+    if (!token) {
       return res.status(400).json({
         success: false,
-        message: "Please provide name and email",
+        message: "Firebase token is required",
       });
     }
+
+    // ✅ Verify Firebase ID token
+    const decoded = await admin.auth().verifyIdToken(token);
+
+    const { email, name, picture } = decoded;
 
     // Check if user exists
     let user = await User.findOne({ email });
 
-    // If user doesn't exist, create new user with Google auth
+    // Create if not exists
     if (!user) {
       user = await User.create({
         name,
         email,
-        // No password for Google OAuth users
+        picture,
       });
-    } else {
-      // Update name if it changed
-      if (user.name !== name) {
-        user.name = name;
-        await user.save();
-      }
     }
 
-    // Remove password from response
+    // Remove password
     const userResponse = user.toObject();
     delete userResponse.password;
 
@@ -145,9 +192,10 @@ export const googleAuthUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Google Auth Error:", error);
-    return res.status(500).json({
+
+    return res.status(401).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: "Invalid Firebase token",
     });
   }
 };

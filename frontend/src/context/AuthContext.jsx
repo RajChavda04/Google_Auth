@@ -1,5 +1,5 @@
 import { createContext, useState, useCallback, useEffect } from "react";
-import { showSuccess, showError, showLoading, dismissToast } from "../utils/toast";
+import { showSuccess, showError } from "../utils/toast";
 export const AuthContext = createContext();
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
       showSuccess(data.message || "Registration successful");
       return { success: true, user: data.user };
     } catch (err) {
-      
+      const errorMessage = err.message;
       setError(errorMessage);
       showError(errorMessage || "Registration failed");
       return { success: false, message: errorMessage };
@@ -97,38 +97,73 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Google Login / Social Login
-  const googleLogin = useCallback(async (name, email) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/users/google-auth`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email }),
-      });
+  // const googleLogin = useCallback(async (name, email) => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await fetch(`${API_BASE_URL}/api/users/google-auth`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ name, email }),
+  //     });
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (!data.success) {
-        showError(data.message || "Google login failed");
-        throw new Error(data.message || "Google login failed");
+  //     if (!data.success) {
+  //       showError(data.message || "Google login failed");
+  //       throw new Error(data.message || "Google login failed");
+  //     }
+
+  //     setUser(data.user);
+  //     localStorage.setItem("user", JSON.stringify(data.user));
+  //     showSuccess(data.message || "Google login successful");
+  //     return { success: true, user: data.user };
+  //   } catch (err) {
+  //     const errorMessage = err.message || "Google login failed";
+  //     setError(errorMessage);
+  //     showError(errorMessage || "Google login failed");
+  //     return { success: false, message: errorMessage };
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
+  const googleLogin = useCallback(async (token) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/users/google-auth`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Google login failed");
+        }
+
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        return { success: true, user: data.user };
+      } catch (err) {
+        const errorMessage =
+          err?.message || "Something went wrong during Google login";
+
+        setError(errorMessage);
+
+        return { success: false, message: errorMessage };
+      } finally {
+        setLoading(false);
       }
+    }, []);
 
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      showSuccess(data.message || "Google login successful");
-      return { success: true, user: data.user };
-    } catch (err) {
-      const errorMessage = err.message || "Google login failed";
-      setError(errorMessage);
-      showError(errorMessage || "Google login failed");
-      return { success: false, message: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   // Logout User
   const logout = useCallback(() => {

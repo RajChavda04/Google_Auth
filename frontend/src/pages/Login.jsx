@@ -16,31 +16,69 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login, googleLogin, loading } = useContext(AuthContext);
   const { isDark, toggleTheme } = useContext(ThemeContext);
-  const handleGoogleLogin = async () => {
-    try {
-      // Create a new GoogleAuthProvider instance for each login
-      const googleProvider = new GoogleAuthProvider();
+
+
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     // Create a new GoogleAuthProvider instance for each login
+  //     const googleProvider = new GoogleAuthProvider();
       
-      // Force account selection dialog to appear every time
-      googleProvider.setCustomParameters({
-        prompt: "select_account", // Always show account selection
-      });
+  //     // Force account selection dialog to appear every time
+  //     googleProvider.setCustomParameters({
+  //       prompt: "select_account", // Always show account selection
+  //     });
 
-      const result = await signInWithPopup(auth, googleProvider);
-      const { displayName, email: googleEmail } = result.user;
-      const response = await googleLogin(displayName || "User", googleEmail);
-      if (response.success) {
-        console.log("Google Login Success", response.user);
-        navigate("/home");
-      } else {
-        setErrors({ google: response.message });
-      }
-    } catch (error) {
-      console.error("Google Login Error", error.message);
-      setErrors({ google: error.message });
-    }
-  };
+  //     const result = await signInWithPopup(auth, googleProvider);
+      
+  //     const { displayName, email: googleEmail } = result.user;
+  //     const response = await googleLogin(displayName || "User", googleEmail);
+  //     if (response.success) {
+  //       console.log("Google Login Success", response.user);
+  //       navigate("/home");
+  //     } else {
+  //       setErrors({ google: response.message });
+  //     }
+  //   } catch (error) {
+  //     console.error("Google Login Error", error.message);
+  //     setErrors({ google: error.message });
+  //   }
+  // };
 
+
+  
+    const handleGoogleLogin = async () => {
+        try {
+          const googleProvider = new GoogleAuthProvider();
+
+          googleProvider.setCustomParameters({
+            prompt: "select_account",
+          });
+
+          const result = await signInWithPopup(auth, googleProvider);
+
+          // ✅ GET TOKEN (IMPORTANT)
+          const idToken = await result.user.getIdToken();
+
+          // ✅ SEND TOKEN ONLY
+          const response = await googleLogin(idToken);
+
+          if (response.success) {
+            console.log("Google Login Success", response.user);
+            navigate("/home");
+          } else {
+            setErrors({ google: response.message });
+          }
+        } catch (error) {
+          console.error("Google Login Error", error.message);
+
+          setErrors({
+            google:
+              error.message === "Failed to fetch"
+                ? "Server not reachable"
+                : error.message,
+          });
+        }
+      };
   const validate = () => {
     const newErrors = {};
     if (!email.includes("@")) newErrors.email = "Enter a valid email";
@@ -142,7 +180,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className={`w-full py-2 rounded-lg font-medium transition  disabled:opacity-50 ${
-              isDark ? "bg-blue-600 text-white cursor-pointer  hover:bg-blue-700" : "bg-black text-white cursor-not-allowed  hover:bg-gray-800"
+              isDark ? "bg-blue-600 text-white cursor-pointer  hover:bg-blue-700" : "bg-black text-white  hover:bg-gray-800"
             }`}
           >
             {loading ? "Logging in..." : "Login"}

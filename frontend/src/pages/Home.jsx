@@ -5,13 +5,13 @@ import { Moon, Sun } from "lucide-react";
 
 export function HomePage({ user, onLogout }) {
   const { isDark, toggleTheme } = useContext(ThemeContext);
-
+  
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-gray-900" : "bg-gray-100"
         }`}
     >
-     
+
       {/* Navbar */}
       <div
         className={`flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 shadow-md transition-colors duration-300 ${isDark ? "bg-gray-800" : "bg-white"
@@ -29,7 +29,7 @@ export function HomePage({ user, onLogout }) {
               className={`text-lg sm:text-xl font-bold ${isDark ? "text-white" : "text-black"
                 }`}
             >
-             oogle
+              oogle
             </h1>
           </div>
 
@@ -38,7 +38,7 @@ export function HomePage({ user, onLogout }) {
             className={`text-sm font-medium sm:text-base ${isDark ? "text-gray-300" : "text-gray-600"
               }`}
           >
-            Hi , {user}
+            Hi , {user?.name}
           </span>
         </div>
 
@@ -50,8 +50,8 @@ export function HomePage({ user, onLogout }) {
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
             className={`p-2 rounded-lg transition-colors cursor-pointer duration-300 ${isDark
-                ? "bg-gray-700 text-yellow-400 hover:bg-gray-600"
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+              ? "bg-gray-700 text-yellow-400 hover:bg-gray-600"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
               }`}
           >
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -63,8 +63,8 @@ export function HomePage({ user, onLogout }) {
             whileTap={{ scale: 0.95 }}
             onClick={onLogout}
             className={`px-3 sm:px-4 py-1.5 text-sm sm:text-base rounded-lg cursor-pointer transition-colors duration-300 ${isDark
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-black text-white hover:bg-gray-800"
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-black text-white hover:bg-gray-800"
               }`}
           >
             Logout
@@ -80,8 +80,24 @@ export function HomePage({ user, onLogout }) {
           className={`w-full max-w-md sm:max-w-lg p-6 sm:p-10 rounded-2xl shadow-lg text-center transition-colors duration-300 ${isDark ? "bg-gray-800 text-white" : "bg-white text-black"
             }`}
         >
+       
+         
+          <div className="flex justify-center mb-4">
+           <img
+           key={user?.picture}
+            // src={user?.picture?.replace("=s96-c", "=s200-c")}
+            src = {user?.picture}
+            alt="profile"
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-gray-300 shadow-md"
+            onError={(e) => {
+              e.currentTarget.src = `https://ui-avatars.com/api/?name=${user?.name}`;
+            }}
+          />
+          </div>
+
+          {/* ✅ Name */}
           <h2 className="text-xl sm:text-2xl font-semibold">
-            Welcome, {user} 👋
+            Welcome, {user?.name} 👋
           </h2>
 
           <p
@@ -95,3 +111,4 @@ export function HomePage({ user, onLogout }) {
     </div>
   );
 }
+

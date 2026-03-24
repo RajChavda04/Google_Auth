@@ -1,4 +1,3 @@
-
 import './App.css'
 import Login from "./pages/Login"
 import { HomePage } from "./pages/Home"
@@ -36,7 +35,7 @@ function App() {
      <ToastProvider />
         <Routes>
           <Route path="/login" element={<LoginRoute element={<Login />} user={user} loading={loading} />} />
-          <Route path="/home" element={<ProtectedRoute element={<HomePage user={user?.name || user?.email} onLogout={handleLogout} />} user={user} loading={loading} />} />
+          <Route path="/home" element={<ProtectedRoute element={<HomePage user={user} onLogout={handleLogout} />} user={user} loading={loading} />} />
           <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
         </Routes>
      
